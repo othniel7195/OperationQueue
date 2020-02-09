@@ -35,7 +35,7 @@ class OperationQueue {
       _activeCompleter = operation.completer;
       print("_runNext : $_activeCompleter");
       Function.apply(operation.function, operation.positionalArguments, operation.namedArguments).then((value){
-        Future((){
+        operation.completer.future.then((_){
           _queue.removeFirst();
           _runNext();
         });
@@ -43,7 +43,7 @@ class OperationQueue {
           operation.completer.complete(value);
         }
       }).catchError((error){
-        Future((){
+        operation.completer.future.then((_){
           _queue.removeFirst();
           _runNext();
         });
